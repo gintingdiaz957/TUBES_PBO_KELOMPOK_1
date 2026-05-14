@@ -5,22 +5,21 @@
 
 using namespace std;
 
-class HealthActivity {
+class HealthActivity
+{
 
 protected:
-
     string startTime;
     string finishTime;
 
     string intensity;
 
 public:
-
     HealthActivity(
         string s,
         string f,
-        string i
-    ) {
+        string i)
+    {
 
         startTime = s;
         finishTime = f;
@@ -28,44 +27,54 @@ public:
         intensity = i;
     }
 
-    string getStartTime() const {
+    string getStartTime() const
+    {
 
         return startTime;
     }
 
-    string getFinishTime() const {
+    string getFinishTime() const
+    {
 
         return finishTime;
     }
 
-    string getIntensity() const {
+    string getIntensity() const
+    {
 
         return intensity;
     }
 
-    int getDuration() const {
+    int getDuration() const
+    {
 
         int sh = stoi(
-            startTime.substr(0,2)
-        );
+            startTime.substr(0, 2));
 
         int sm = stoi(
-            startTime.substr(3,2)
-        );
+            startTime.substr(3, 2));
 
         int fh = stoi(
-            finishTime.substr(0,2)
-        );
+            finishTime.substr(0, 2));
 
         int fm = stoi(
-            finishTime.substr(3,2)
-        );
+            finishTime.substr(3, 2));
 
         int start =
-        sh * 60 + sm;
+            sh * 60 + sm;
 
         int finish =
-        fh * 60 + fm;
+            fh * 60 + fm;
+
+        // =====================================
+        // HANDLE CROSS MIDNIGHT
+        // =====================================
+
+        if (finish < start)
+        {
+
+            finish += 24 * 60;
+        }
 
         return finish - start;
     }
@@ -76,13 +85,13 @@ public:
     virtual string
     getActivityName() const = 0;
 
-    virtual ~HealthActivity(){}
+    virtual ~HealthActivity() {}
 };
 
-inline ostream& operator<<(
-    ostream& os,
-    const HealthActivity& act
-) {
+inline ostream &operator<<(
+    ostream &os,
+    const HealthActivity &act)
+{
 
     os << "Activity        : "
        << act.getActivityName()
