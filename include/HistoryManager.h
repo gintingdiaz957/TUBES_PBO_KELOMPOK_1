@@ -12,37 +12,38 @@
 
 using namespace std;
 
-class HistoryManager {
+class HistoryManager
+{
 
 private:
-
     map<
         string,
-        vector<HealthActivity*>
-    > history;
+        vector<HealthActivity *>>
+        history;
 
 public:
-
     void addActivity(
         string date,
-        HealthActivity* activity
-    ) {
+        HealthActivity *activity)
+    {
 
         history[date]
-        .push_back(activity);
+            .push_back(activity);
     }
 
     // =====================================
     // SHOW HISTORY
     // =====================================
 
-    void showHistory() {
+    void showHistory()
+    {
 
         cout << "\n========================================================\n";
         cout << "                    ACTIVITY HISTORY\n";
         cout << "========================================================\n\n";
 
-        for(auto& pair : history) {
+        for (auto &pair : history)
+        {
 
             cout << "Date : "
                  << pair.first
@@ -50,13 +51,12 @@ public:
 
             cout << "--------------------------------------------------------\n";
 
-            for(auto activity
-                : pair.second)
+            for (auto activity : pair.second)
             {
 
                 cout
-                << *activity
-                << endl;
+                    << *activity
+                    << endl;
             }
         }
     }
@@ -65,18 +65,18 @@ public:
     // SAVE TO TXT
     // =====================================
 
-    void saveToFile() {
+    void saveToFile()
+    {
 
         ofstream file(
             "health_logs.txt",
-            ios::app
-        );
+            ios::app);
 
         time_t now =
-        time(0);
+            time(0);
 
-        char* dt =
-        ctime(&now);
+        char *dt =
+            ctime(&now);
 
         file << "========================================================\n";
 
@@ -85,62 +85,62 @@ public:
 
         file << "========================================================\n";
 
-        for(auto& pair : history) {
+        for (auto &pair : history)
+        {
 
             file << "\nDate : "
                  << pair.first
                  << "\n\n";
 
             file
-            << left
-            << setw(15)
-            << "Activity"
+                << left
+                << setw(15)
+                << "Activity"
 
-            << setw(15)
-            << "Start"
+                << setw(15)
+                << "Start"
 
-            << setw(15)
-            << "Finish"
+                << setw(15)
+                << "Finish"
 
-            << setw(15)
-            << "Duration"
+                << setw(15)
+                << "Duration"
 
-            << setw(15)
-            << "Calories"
+                << setw(15)
+                << "Calories"
 
-            << endl;
+                << endl;
 
-            for(auto activity
-                : pair.second)
+            for (auto activity : pair.second)
             {
 
                 file
-                << setw(15)
-                << activity
-                ->getActivityName();
+                    << setw(15)
+                    << activity
+                           ->getActivityName();
 
                 file
-                << setw(15)
-                << activity
-                ->getStartTime();
+                    << setw(15)
+                    << activity
+                           ->getStartTime();
 
                 file
-                << setw(15)
-                << activity
-                ->getFinishTime();
+                    << setw(15)
+                    << activity
+                           ->getFinishTime();
 
                 file
-                << setw(15)
-                << activity
-                ->getDuration();
+                    << setw(15)
+                    << activity
+                           ->getDuration();
 
                 file
-                << setw(15)
-                << activity
-                ->calculateBurnedCalories();
+                    << setw(15)
+                    << activity
+                           ->calculateBurnedCalories();
 
                 file
-                << endl;
+                    << endl;
             }
         }
 
@@ -153,12 +153,21 @@ public:
     // DESTRUCTOR
     // =====================================
 
-    ~HistoryManager() {
+    map<
+        string,
+        vector<HealthActivity *>> &
+    getHistory()
+    {
 
-        for(auto& pair : history) {
+        return history;
+    }
+    ~HistoryManager()
+    {
 
-            for(auto activity
-                : pair.second)
+        for (auto &pair : history)
+        {
+
+            for (auto activity : pair.second)
             {
 
                 delete activity;

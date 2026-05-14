@@ -10,7 +10,7 @@
 #include "include/Sleep.h"
 
 #include "include/UserProfile.h"
-#include "include/GoalTracker.h"
+#include "include/CaloriesTracker.h"
 #include "include/HistoryManager.h"
 #include "include/HealthAnalyzer.h"
 
@@ -84,13 +84,15 @@ int main() {
 
     UserProfile user;
 
-    GoalTracker<double> goal(500);
 
     HistoryManager manager;
 
     // =====================================
     // LOAD PROFILE
     // =====================================
+    CaloriesTracker caloriesTracker(
+    manager.getHistory()
+);
 
     if(user.loadProfile()) {
 
@@ -284,7 +286,7 @@ int main() {
         cout << "[1] Add Activity\n";
         cout << "[2] Show History\n";
         cout << "[3] Health Analysis\n";
-        cout << "[4] Goal Progress\n";
+        cout << "[4] Calories Summary\n";
         cout << "[0] Exit\n\n";
 
         cout << "Choose Menu : ";
@@ -402,9 +404,8 @@ int main() {
                 activity
                 ->calculateBurnedCalories();
 
-                goal.addProgress(
-                    calories
-                );
+                    calories;
+
 
                 manager.saveToFile();
 
@@ -487,42 +488,22 @@ int main() {
             }
 
             // =================================
-            // GOAL
+            // Calories Summary
             // =================================
 
             case 4: {
 
-                clearScreen();
+    clearScreen();
 
-                showTitle();
+    showTitle();
 
-                cout << "=== GOAL PROGRESS ===\n\n";
+    caloriesTracker
+    .showSummary();
 
-                cout << "Progress : "
-                     << goal.getPercentage()
-                     << "%\n\n";
+    pauseScreen();
 
-                int bars =
-                goal.getPercentage() / 5;
-
-                cout << "[";
-
-                for(int i=0;i<bars;i++) {
-
-                    cout << "#";
-                }
-
-                for(int i=bars;i<20;i++) {
-
-                    cout << "-";
-                }
-
-                cout << "]\n";
-
-                pauseScreen();
-
-                break;
-            }
+    break;
+}
 
             // =================================
             // EXIT
