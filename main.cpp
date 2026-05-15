@@ -430,7 +430,7 @@ int main() {
 
                 showTitle();
 
-                manager.showHistory();
+                manager.showHistoryFromFile();
 
                 pauseScreen();
 

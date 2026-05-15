@@ -8,3 +8,13 @@ Activity       Start          Finish         Duration       Calories
 Running        08:00          11:00          180            1920           
 
 
+========================================================
+Saved At : Fri May 15 10:43:32 2026
+========================================================
+
+Date : 12
+
+Activity       Start          Finish         Duration       Calories       
+Running        07:00          07:20          20             213.333        
+
+
