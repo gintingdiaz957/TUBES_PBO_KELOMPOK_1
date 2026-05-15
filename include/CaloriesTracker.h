@@ -2,11 +2,10 @@
 #define CALORIESTRACKER_H
 
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include <map>
-#include <vector>
 #include <iomanip>
-
-#include "HealthActivity.h"
 
 using namespace std;
 
@@ -14,122 +13,80 @@ class CaloriesTracker {
 
 private:
 
-    map<
-        string,
-        vector<HealthActivity*>
-    >& history;
+    map<string,double>
+    caloriesByDate;
+
+    double totalCalories;
 
 public:
 
-    CaloriesTracker(
+    CaloriesTracker() {
 
-        map<
-            string,
-            vector<HealthActivity*>
-        >& h
+        totalCalories = 0;
 
-    ) : history(h) {}
-
-    // =====================================
-    // TOTAL ALL CALORIES
-    // =====================================
-
-    double getTotalCalories() {
-
-        double total = 0;
-
-        for(auto& pair : history) {
-
-            for(auto activity
-                : pair.second)
-            {
-
-                total +=
-                activity
-                ->calculateBurnedCalories();
-            }
-        }
-
-        return total;
+        loadCalories();
     }
 
     // =====================================
-    // TOTAL BY DATE
+    // LOAD FROM TXT
     // =====================================
 
-    double getCaloriesByDate(
-        string date
-    ) {
+    void loadCalories() {
 
-        double total = 0;
+        ifstream file(
+            "health_logs.txt"
+        );
 
-        if(history.find(date)
-           != history.end())
-        {
+        string line;
 
-            for(auto activity
-                : history[date])
+        string currentDate;
+
+        while(getline(file,line)) {
+
+            // =============================
+            // GET DATE
+            // =============================
+
+            if(line.find("Date : ")
+               != string::npos)
             {
 
-                total +=
-                activity
-                ->calculateBurnedCalories();
+                currentDate =
+                line.substr(7);
+            }
+
+            // =============================
+            // GET CALORIES
+            // =============================
+
+            else if(
+                line.find("Calories")
+                != string::npos
+            &&
+                line.find("Calories Burned")
+                == string::npos
+            ) {
+
+                stringstream ss(line);
+
+                string temp;
+
+                double calories;
+
+                ss >> temp;
+
+                ss >> calories;
+
+                caloriesByDate[
+                    currentDate
+                ] += calories;
+
+                totalCalories +=
+                calories;
             }
         }
 
-        return total;
-    }
-
-    // =====================================
-    // TOTAL ACTIVITIES
-    // =====================================
-
-    int getTotalActivities() {
-
-        int total = 0;
-
-        for(auto& pair : history) {
-
-            total +=
-            pair.second.size();
-        }
-
-        return total;
-    }
-
-    // =====================================
-    // HIGHEST CALORIE ACTIVITY
-    // =====================================
-
-    string getHighestBurnActivity() {
-
-        double highest = 0;
-
-        string result =
-        "No Activity";
-
-        for(auto& pair : history) {
-
-            for(auto activity
-                : pair.second)
-            {
-
-                double calories =
-                activity
-                ->calculateBurnedCalories();
-
-                if(calories > highest) {
-
-                    highest = calories;
-
-                    result =
-                    activity
-                    ->getActivityName();
-                }
-            }
-        }
-
-        return result;
+        file.close();
     }
 
     // =====================================
@@ -140,7 +97,7 @@ public:
 
         cout << "\n========================================================\n";
 
-        cout << "                 CALORIES SUMMARY\n";
+        cout << "                CALORIES SUMMARY\n";
 
         cout << "========================================================\n\n";
 
@@ -148,29 +105,21 @@ public:
              << setprecision(1);
 
         cout << "Total Calories Burned : "
-             << getTotalCalories()
-             << " kcal\n";
+             << totalCalories
+             << " kcal\n\n";
 
-        cout << "Total Activities      : "
-             << getTotalActivities()
-             << endl;
+        cout << "Calories By Date\n";
 
-        cout << "Highest Burn Activity : "
-             << getHighestBurnActivity()
-             << endl;
+        cout << "--------------------------------------------------------\n";
 
-        cout << "\n========================================================\n";
-
-        cout << "\nCALORIES BY DATE\n\n";
-
-        for(auto& pair : history) {
+        for(auto& pair
+            : caloriesByDate)
+        {
 
             cout << "Date "
                  << pair.first
                  << " : "
-                 << getCaloriesByDate(
-                        pair.first
-                    )
+                 << pair.second
                  << " kcal\n";
         }
 

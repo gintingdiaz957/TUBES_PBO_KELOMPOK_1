@@ -10,7 +10,7 @@
 #include "include/Sleep.h"
 
 #include "include/UserProfile.h"
-#include "include/CaloriesTracker.h"
+#include "include/caloriesTracker.h"
 #include "include/HistoryManager.h"
 #include "include/HealthAnalyzer.h"
 
@@ -90,9 +90,7 @@ int main() {
     // =====================================
     // LOAD PROFILE
     // =====================================
-    CaloriesTracker caloriesTracker(
-    manager.getHistory()
-);
+   CaloriesTracker caloriesTracker;
 
     if(user.loadProfile()) {
 
@@ -496,6 +494,8 @@ int main() {
     clearScreen();
 
     showTitle();
+
+    CaloriesTracker caloriesTracker;
 
     caloriesTracker
     .showSummary();
