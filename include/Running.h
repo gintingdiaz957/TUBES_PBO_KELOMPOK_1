@@ -26,7 +26,7 @@ public:
     string
     getActivityName() const override {
 
-        return "Running";
+        return "Lari";
     }
 };
 

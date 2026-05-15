@@ -97,18 +97,18 @@ public:
 
         cout << "\n========================================================\n";
 
-        cout << "                CALORIES SUMMARY\n";
+        cout << "               RINGKASAN KALORI\n";
 
         cout << "========================================================\n\n";
 
         cout << fixed
              << setprecision(1);
 
-        cout << "Total Calories Burned : "
+        cout << "Total Kalori Terbakar : "
              << totalCalories
              << " kcal\n\n";
 
-        cout << "Calories By Date\n";
+        cout << "Kalori Per Tanggal\n";
 
         cout << "--------------------------------------------------------\n";
 
@@ -116,7 +116,7 @@ public:
             : caloriesByDate)
         {
 
-            cout << "Date "
+            cout << "Tanggal "
                  << pair.first
                  << " : "
                  << pair.second

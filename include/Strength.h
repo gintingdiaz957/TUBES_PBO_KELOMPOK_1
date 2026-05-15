@@ -34,7 +34,7 @@ public:
     string
     getActivityName() const override {
 
-        return "Strength";
+        return "Latihan Beban";
     }
 };
 

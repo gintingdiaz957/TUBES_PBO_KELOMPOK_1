@@ -32,20 +32,20 @@ public:
     string
     getActivityName() const override {
 
-        return "Sleep";
+        return "Tidur";
     }
 
     string getSleepQuality() {
 
         if(hours >= 8) {
-            return "Excellent";
+            return "Sangat Baik";
         }
 
         else if(hours >= 6) {
-            return "Good";
+            return "Baik";
         }
 
-        return "Poor";
+        return "Kurang";
     }
 };
 

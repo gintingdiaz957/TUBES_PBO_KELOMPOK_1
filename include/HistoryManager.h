@@ -42,17 +42,17 @@ public:
     {
 
         cout << "\n========================================================\n";
-        cout << "                    ACTIVITY HISTORY\n";
+        cout << "                   RIWAYAT AKTIVITAS\n";
         cout << "========================================================\n\n";
 
         for (auto &pair : history)
         {
 
-            cout << "Date : "
+            cout << "Tanggal : "
                  << pair.first
                  << endl;
 
-            cout << "--------------------------------------------------------\n";
+            cout << "---------------------------------------------------------------------\n";
 
             for (auto activity : pair.second)
             {
@@ -83,7 +83,7 @@ public:
 
         file << "========================================================\n";
 
-        file << "Saved At : "
+        file << "Disimpan Pada : "
              << dt;
 
         file << "========================================================\n";
@@ -158,9 +158,9 @@ public:
 
 void showHistoryFromFile() {
 
-    cout << "\n========================================================\n";
-    cout << "                    ACTIVITY HISTORY\n";
-    cout << "========================================================\n\n";
+    cout << "\n=====================================================================\n";
+    cout << "                   RIWAYAT AKTIVITAS\n";
+    cout << "=====================================================================\n\n";
 
     ifstream file("health_logs.txt");
 
@@ -187,12 +187,10 @@ void showHistoryFromFile() {
 
     while (getline(file, line)) {
 
-        // Hapus \r (Windows line endings)
         if (!line.empty() && line.back() == '\r') {
             line.pop_back();
         }
 
-        // Deteksi baris "Date : ..."
         if (line.find("Date : ") != string::npos) {
 
             currentDate = line.substr(7);
@@ -207,7 +205,6 @@ void showHistoryFromFile() {
             inDataSection = false;
         }
 
-        // Deteksi baris header kolom
         else if (!currentDate.empty()
             && line.find("Activity") != string::npos
             && line.find("Start")    != string::npos) {
@@ -215,14 +212,12 @@ void showHistoryFromFile() {
             inDataSection = true;
         }
 
-        // Baris separator / header sesi baru -> reset
         else if (line.find("===") != string::npos
               || line.find("Saved At") != string::npos) {
 
             inDataSection = false;
         }
 
-        // Baris data aktivitas (fixed-width 15 chars per kolom)
         else if (inDataSection && line.size() >= 45) {
 
             auto trimStr = [](string s) -> string {
@@ -243,7 +238,6 @@ void showHistoryFromFile() {
 
             if (rec.activity.empty()) continue;
 
-            // Deduplication: skip jika sudah ada entri yang sama
             string key = rec.activity + "|" + rec.start + "|" + rec.finish;
 
             if (seen[currentDate].find(key) == seen[currentDate].end()) {
@@ -263,15 +257,15 @@ void showHistoryFromFile() {
 
     for (auto& pair : fileHistory) {
 
-        cout << "Date : " << pair.first << "\n";
-        cout << "--------------------------------------------------------\n";
+        cout << "Tanggal : " << pair.first << "\n";
+        cout << "---------------------------------------------------------------------\n";
 
         cout << left
-             << setw(15) << "Activity"
-             << setw(15) << "Start"
-             << setw(15) << "Finish"
-             << setw(15) << "Duration"
-             << setw(15) << "Calories"
+             << setw(15) << "Aktivitas"
+             << setw(15) << "Mulai"
+             << setw(15) << "Selesai"
+             << setw(15) << "Durasi"
+             << setw(15) << "Kalori"
              << "\n";
 
         for (auto& rec : pair.second) {
@@ -301,6 +295,7 @@ void showHistoryFromFile() {
 
         return history;
     }
+
     ~HistoryManager()
     {
 

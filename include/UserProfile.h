@@ -28,7 +28,7 @@ public:
         if(n.length() < 2) {
 
             throw InvalidInputException(
-                "Invalid Name"
+                "Nama Tidak Valid"
             );
         }
 
@@ -40,7 +40,7 @@ public:
         if(w < 20 || w > 300) {
 
             throw InvalidInputException(
-                "Weight must be 20-300"
+                "Berat Badan Harus 20-300"
             );
         }
 
@@ -52,7 +52,7 @@ public:
         if(h < 100 || h > 250) {
 
             throw InvalidInputException(
-                "Height must be 100-250"
+                "Tinggi Badan Harus 100-250"
             );
         }
 
@@ -64,7 +64,7 @@ public:
         if(a < 5 || a > 120) {
 
             throw InvalidInputException(
-                "Age must be 5-120"
+                "Umur Harus 5-120"
             );
         }
 

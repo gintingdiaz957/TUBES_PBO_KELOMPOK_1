@@ -93,24 +93,24 @@ inline ostream &operator<<(
     const HealthActivity &act)
 {
 
-    os << "Activity        : "
+    os << "Aktivitas      : "
        << act.getActivityName()
        << endl;
 
-    os << "Start Time     : "
+    os << "Jam Mulai      : "
        << act.getStartTime()
        << endl;
 
-    os << "Finish Time    : "
+    os << "Jam Selesai    : "
        << act.getFinishTime()
        << endl;
 
-    os << "Duration       : "
+    os << "Durasi         : "
        << act.getDuration()
-       << " minutes"
+       << " menit"
        << endl;
 
-    os << "Calories Burned: "
+    os << "Kalori Terbakar: "
        << act.calculateBurnedCalories()
        << " kcal"
        << endl;

@@ -14,7 +14,10 @@
 #include "include/HistoryManager.h"
 #include "include/HealthAnalyzer.h"
 
+#include "include/Warna.h"
+
 using namespace std;
+
 
 // =========================================
 // CLEAR SCREEN
@@ -31,7 +34,9 @@ void clearScreen() {
 
 void pauseScreen() {
 
-    cout << "\nPress Enter To Continue...";
+    setColor(10);
+    cout << "\nTekan Enter Untuk Melanjutkan...";
+    setColor(15);
 
     cin.ignore(
         numeric_limits<streamsize>::max(),
@@ -47,9 +52,22 @@ void pauseScreen() {
 
 void showTitle() {
 
+    setColor(11);
     cout << "========================================================\n";
-    cout << "                FITTRACK PRO SYSTEM\n";
+
+    setColor(11);
+    cout << "+";
+    
+    setColor(6);
+    cout << "                FITTRACK PRO SYSTEM                   ";
+
+    setColor(11);
+    cout << "+\n";
+
+    setColor(11);
     cout << "========================================================\n\n";
+
+    resetColor();
 }
 
 // =========================================
@@ -58,13 +76,16 @@ void showTitle() {
 
 void loading() {
 
-    cout << "Loading";
+    setColor(10);
+    cout << "Memuat";
 
     for(int i=0;i<3;i++) {
 
+        setColor(10);
         cout << ".";
-
+        
         Sleep(400);
+        setColor(15);
     }
 
     cout << endl;
@@ -98,9 +119,11 @@ int main() {
 
         showTitle();
 
-        cout << "Welcome Back, "
+        setColor(10);
+        cout << "Selamat Datang Kembali, "
              << user.getName()
              << "!\n\n";
+        setColor(15);
     }
 
     // =====================================
@@ -118,59 +141,86 @@ int main() {
 
         int goalChoice;
 
-        cout << "=== USER REGISTRATION ===\n\n";
+        setColor(11);
+        cout << "=== ";
 
-        cout << "Input Name : ";
+        setColor(6);
+        cout << "REGISTRASI PENGGUNA";
+
+        setColor(11);
+        cout << " ===\n\n";
+
+        setColor(8);
+        cout << "Nama : ";
 
         getline(cin,name);
+        setColor(15);
 
         do {
 
-            cout << "Input Weight (20-300 kg): ";
+            setColor(14);
+            cout << "Berat Badan (20-300 kg): ";
 
             cin >> weight;
 
             if(weight < 20 || weight > 300) {
 
-                cout << "Invalid Weight!\n\n";
+                setColor(12);
+                cout << "Berat Badan Tidak Valid!\n\n";
             }
 
         } while(weight < 20 || weight > 300);
 
         do {
 
-            cout << "Input Height (100-250 cm): ";
+            setColor(14);
+            cout << "Tinggi Badan (100-250 cm): ";
 
             cin >> height;
 
             if(height < 100 || height > 250) {
 
-                cout << "Invalid Height!\n\n";
+                setColor(12);
+                cout << "Tinggi Badan Tidak Valid!\n\n";
             }
 
         } while(height < 100 || height > 250);
 
         do {
 
-            cout << "Input Age (5-120): ";
+            setColor(14);
+            cout << "Umur (5-120): ";
 
             cin >> age;
 
             if(age < 5 || age > 120) {
 
-                cout << "Invalid Age!\n\n";
+                setColor(12);
+                cout << "Umur Tidak Valid!\n\n";
             }
 
         } while(age < 5 || age > 120);
 
-        cout << "\n=== CHOOSE GOAL ===\n\n";
+        setColor(15);
 
-        cout << "1. Weight Loss\n";
-        cout << "2. Muscle Gain\n";
-        cout << "3. Healthy Lifestyle\n\n";
+        setColor(11);
+        cout << "\n===";
+        
+        setColor(6);
+        cout << " PILIH TUJUAN ";
+        
+        setColor(11);
+        cout << "===\n\n";
 
-        cout << "Choose : ";
+        setColor(6);
+        cout << "1. Menurunkan Berat Badan\n";
+        cout << "2. Menambah Massa Otot\n";
+        cout << "3. Menjaga Pola Hidup Sehat\n\n";
 
+        setColor(6);
+        cout << "Pilih : ";
+
+        setColor(8);
         cin >> goalChoice;
 
         user.setName(name);
@@ -186,7 +236,7 @@ int main() {
             case 1:
 
                 user.setGoal(
-                    "Weight Loss"
+                    "Menurunkan Berat Badan"
                 );
 
                 break;
@@ -194,7 +244,7 @@ int main() {
             case 2:
 
                 user.setGoal(
-                    "Muscle Gain"
+                    "Menambah Massa Otot"
                 );
 
                 break;
@@ -202,7 +252,7 @@ int main() {
             default:
 
                 user.setGoal(
-                    "Healthy Lifestyle"
+                    "Menjaga Pola Hidup Sehat"
                 );
         }
 
@@ -212,7 +262,8 @@ int main() {
 
         showTitle();
 
-        cout << "Profile Saved Successfully!\n\n";
+        setColor(10);
+        cout << "Profil Berhasil Disimpan!\n\n";
     }
 
     // =====================================
@@ -235,27 +286,31 @@ int main() {
 
         showTitle();
 
-        cout << "PROFILE SUMMARY\n";
+        setColor(6);
+        cout << "RINGKASAN PROFIL\n";
 
+        setColor(11); 
         cout << "========================================================\n\n";
+        setColor(15);
 
-        cout << "Name                : "
+        setColor(8);
+        cout << "Nama                : "
              << user.getName()
              << endl;
 
-        cout << "Weight              : "
+        cout << "Berat Badan         : "
              << user.getWeight()
              << " kg\n";
 
-        cout << "Height              : "
+        cout << "Tinggi Badan        : "
              << user.getHeight()
              << " cm\n";
 
-        cout << "Age                 : "
+        cout << "Umur                : "
              << user.getAge()
              << endl;
 
-        cout << "Goal                : "
+        cout << "Tujuan              : "
              << user.getGoal()
              << endl;
 
@@ -268,27 +323,30 @@ int main() {
                 ::getBMICategory(bmi)
              << ")\n";
 
-        cout << "Ideal Weight        : "
+        cout << "Berat Badan Ideal   : "
              << user.getIdealWeight()
              << " kg\n";
 
-        cout << "Daily Calories Need : "
+        cout << "Kebutuhan Kalori    : "
              << user
                 .getRecommendedCalories()
              << " kcal\n";
 
+        setColor(11);
         cout << "\n========================================================\n";
 
-        cout << "\nMAIN MENU\n\n";
+        setColor(6);
+        cout << "\nMENU UTAMA\n\n";
 
-        cout << "[1] Add Activity\n";
-        cout << "[2] Show History\n";
-        cout << "[3] Health Analysis\n";
-        cout << "[4] Calories Summary\n";
-        cout << "[0] Exit\n\n";
+        cout << "[1] Tambah Aktivitas\n";
+        cout << "[2] Lihat Riwayat\n";
+        cout << "[3] Analisis Kesehatan\n";
+        cout << "[4] Ringkasan Kalori\n";
+        cout << "[0] Keluar\n\n";
 
-        cout << "Choose Menu : ";
+        cout << "Pilih Menu : ";
 
+        setColor(15);
         cin >> choice;
 
         // =====================================
@@ -296,10 +354,6 @@ int main() {
         // =====================================
 
         switch(choice) {
-
-            // =================================
-            // ADD ACTIVITY
-            // =================================
 
             case 1: {
 
@@ -314,26 +368,37 @@ int main() {
 
                 int type;
 
-                cout << "=== ADD ACTIVITY ===\n\n";
+                setColor(11);
+                cout << "=== ";
 
-                cout << "Input Date : ";
+                setColor(6);
+                cout << "TAMBAH AKTIVITAS";
+
+                setColor(11);
+                cout << " ===\n\n";
+
+                setColor(8);
+                cout << "Tanggal : ";
 
                 cin >> date;
+                setColor(6);
 
-                cout << "\n1. Running\n";
-                cout << "2. Cycling\n";
-                cout << "3. Strength\n";
-                cout << "4. Sleep\n\n";
+                cout << "\n1. Lari\n";
+                cout << "2. Bersepeda\n";
+                cout << "3. Latihan Beban\n";
+                cout << "4. Tidur\n\n";
 
-                cout << "Choose Activity : ";
+                setColor(6);
+                cout << "Pilih Aktivitas : ";
 
                 cin >> type;
 
-                cout << "\nInput Start Time (HH:MM): ";
+                setColor(8);
+                cout << "\nJam Mulai (HH:MM): ";
 
                 cin >> start;
 
-                cout << "Input Finish Time (HH:MM): ";
+                cout << "Jam Selesai (HH:MM): ";
 
                 cin >> finish;
 
@@ -407,20 +472,19 @@ int main() {
 
                 manager.saveToFile();
 
-                cout << "\nActivity Saved Successfully!\n\n";
-
-                cout << "Calories Burned : "
+                setColor(10);
+                cout << "\nAktivitas Berhasil Disimpan!\n\n";
+                
+                setColor(14);
+                cout << "Kalori Terbakar : "
                      << calories
                      << " kcal\n";
 
                 pauseScreen();
+                setColor(15);
 
                 break;
             }
-
-            // =================================
-            // SHOW HISTORY
-            // =================================
 
             case 2:
 
@@ -433,10 +497,6 @@ int main() {
                 pauseScreen();
 
                 break;
-
-            // =================================
-            // ANALYSIS
-            // =================================
 
             case 3: {
 
@@ -452,62 +512,65 @@ int main() {
                     user.getHeight()
                 );
 
-                cout << "=== HEALTH ANALYSIS ===\n\n";
+                setColor(11);
+                cout << "=== ";
 
-                cout << "BMI Category : "
+                setColor(6);
+                cout << "ANALISIS KESEHATAN";
+
+                setColor(11);
+                cout << " ===\n\n";
+
+                setColor(8);
+                cout << "Kategori BMI : "
                      << HealthAnalyzer
                         ::getBMICategory(bmi)
                      << endl;
 
-                cout << "\nRecommendation:\n\n";
+                setColor(6);
+                cout << "\nRekomendasi:\n\n";
 
                 if(bmi > 25) {
 
-                    cout << "- Try More Cardio Exercise\n";
+                    cout << "- Perbanyak Olahraga Kardio\n";
 
-                    cout << "- Reduce Calories Intake\n";
+                    cout << "- Kurangi Asupan Kalori\n";
                 }
 
                 else if(bmi < 18.5) {
 
-                    cout << "- Increase Nutrition Intake\n";
+                    cout << "- Tingkatkan Asupan Nutrisi\n";
 
-                    cout << "- Try Strength Training\n";
+                    cout << "- Coba Latihan Kekuatan\n";
                 }
 
                 else {
 
-                    cout << "- Keep Your Healthy Lifestyle\n";
+                    cout << "- Pertahankan Pola Hidup Sehat\n";
                 }
 
                 pauseScreen();
 
+                setColor(15);
                 break;
             }
 
-            // =================================
-            // Calories Summary
-            // =================================
-
             case 4: {
 
-    clearScreen();
+                clearScreen();
 
-    showTitle();
+                showTitle();
 
-    CaloriesTracker caloriesTracker;
+                CaloriesTracker caloriesTracker;
 
-    caloriesTracker
-    .showSummary();
+                caloriesTracker
+                .showSummary();
 
-    pauseScreen();
+                pauseScreen();
 
-    break;
-}
-
-            // =================================
-            // EXIT
-            // =================================
+                setColor(15);
+                break;
+            }
 
             case 0:
 
@@ -515,18 +578,18 @@ int main() {
 
                 showTitle();
 
-                cout << "Thank You For Using FITTRACK PRO\n\n";
+                setColor(10);
+                cout << "Terima Kasih Telah Menggunakan FITTRACK PRO\n\n";
 
+                setColor(15);
                 break;
-
-            // =================================
-            // INVALID
-            // =================================
 
             default:
 
-                cout << "\nInvalid Menu!\n";
+                setColor(12);
+                cout << "\nMenu Tidak Valid!\n";
 
+                setColor(15);  
                 pauseScreen();
         }
 
