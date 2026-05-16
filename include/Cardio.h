@@ -17,9 +17,8 @@ public:
         string i,
         double w
     )
-    : HealthActivity(s,f,i)
+    : HealthActivity(s, f, i)
     {
-
         weight = w;
     }
 };

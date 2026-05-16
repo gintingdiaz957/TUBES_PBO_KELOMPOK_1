@@ -13,12 +13,9 @@ class UserProfile {
 private:
 
     string name;
-
     double weight;
     double height;
-
     int age;
-
     string goal;
 
 public:
@@ -113,10 +110,6 @@ public:
         return 25 * weight;
     }
 
-    // =====================================
-    // SAVE PROFILE
-    // =====================================
-
     void saveProfile() {
 
         ofstream file(
@@ -124,53 +117,22 @@ public:
             ios::binary
         );
 
-        file.write(
-            (char*)&weight,
-            sizeof(weight)
-        );
+        file.write((char*)&weight, sizeof(weight));
+        file.write((char*)&height, sizeof(height));
+        file.write((char*)&age, sizeof(age));
 
-        file.write(
-            (char*)&height,
-            sizeof(height)
-        );
+        int len = name.length();
 
-        file.write(
-            (char*)&age,
-            sizeof(age)
-        );
+        file.write((char*)&len, sizeof(len));
+        file.write(name.c_str(), len);
 
-        int len =
-        name.length();
+        len = goal.length();
 
-        file.write(
-            (char*)&len,
-            sizeof(len)
-        );
-
-        file.write(
-            name.c_str(),
-            len
-        );
-
-        len =
-        goal.length();
-
-        file.write(
-            (char*)&len,
-            sizeof(len)
-        );
-
-        file.write(
-            goal.c_str(),
-            len
-        );
+        file.write((char*)&len, sizeof(len));
+        file.write(goal.c_str(), len);
 
         file.close();
     }
-
-    // =====================================
-    // LOAD PROFILE
-    // =====================================
 
     bool loadProfile() {
 
@@ -184,55 +146,30 @@ public:
             return false;
         }
 
-        file.read(
-            (char*)&weight,
-            sizeof(weight)
-        );
-
-        file.read(
-            (char*)&height,
-            sizeof(height)
-        );
-
-        file.read(
-            (char*)&age,
-            sizeof(age)
-        );
+        file.read((char*)&weight, sizeof(weight));
+        file.read((char*)&height, sizeof(height));
+        file.read((char*)&age, sizeof(age));
 
         int len;
 
-        file.read(
-            (char*)&len,
-            sizeof(len)
-        );
+        file.read((char*)&len, sizeof(len));
 
         char* buffer =
         new char[len + 1];
 
-        file.read(
-            buffer,
-            len
-        );
-
+        file.read(buffer, len);
         buffer[len] = '\0';
 
         name = buffer;
 
         delete[] buffer;
 
-        file.read(
-            (char*)&len,
-            sizeof(len)
-        );
+        file.read((char*)&len, sizeof(len));
 
         buffer =
         new char[len + 1];
 
-        file.read(
-            buffer,
-            len
-        );
-
+        file.read(buffer, len);
         buffer[len] = '\0';
 
         goal = buffer;

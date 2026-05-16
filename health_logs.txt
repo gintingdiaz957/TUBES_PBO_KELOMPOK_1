@@ -1,10 +1,10 @@
 ========================================================
-Disimpan Pada : Sat May 16 12:52:09 2026
+Disimpan Pada : Sat May 16 15:05:37 2026
 ========================================================
 
-Date : 07-05-2026
+Date : 01-01-2020
 
-Activity       Start          Finish         Duration       Calories       
-Tidur          22:00          07:00          540            400            
+Activity       Start          Finish         Duration       Calories       Note                     
+Tidur          22:00          06:00          480            400            Baik (7-9 jam)           
 
 

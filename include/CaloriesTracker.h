@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include <map>
+#include <set>
 #include <iomanip>
 
 #include "Warna.h"
@@ -15,10 +16,29 @@ class CaloriesTracker {
 
 private:
 
-    map<string,double>
+    map<string, double>
     caloriesByDate;
 
     double totalCalories;
+
+    string trimString(string text) {
+
+        size_t start =
+        text.find_first_not_of(" \t\r\n");
+
+        size_t end =
+        text.find_last_not_of(" \t\r\n");
+
+        if(start == string::npos) {
+
+            return "";
+        }
+
+        return text.substr(
+            start,
+            end - start + 1
+        );
+    }
 
 public:
 
@@ -29,71 +49,109 @@ public:
         loadCalories();
     }
 
-    // =====================================
-    // LOAD FROM TXT
-    // =====================================
-
     void loadCalories() {
 
-        ifstream file(
-            "health_logs.txt"
-        );
+        caloriesByDate.clear();
+        totalCalories = 0;
+
+        ifstream file("health_logs.txt");
+
+        if(!file.is_open()) {
+
+            return;
+        }
 
         string line;
-
         string currentDate;
+        bool inDataSection = false;
 
-        while(getline(file,line)) {
+        set<string> seen;
 
-            // =============================
-            // GET DATE
-            // =============================
+        while(getline(file, line)) {
 
-            if(line.find("Date : ")
-               != string::npos)
-            {
+            if(!line.empty() && line.back() == '\r') {
 
-                currentDate =
-                line.substr(7);
+                line.pop_back();
             }
 
-            // =============================
-            // GET CALORIES
-            // =============================
+            if(line.find("Date : ") != string::npos) {
 
-            else if(
-                line.find("Calories")
-                != string::npos
-            &&
-                line.find("Calories Burned")
-                == string::npos
-            ) {
+                currentDate =
+                trimString(line.substr(7));
 
-                stringstream ss(line);
+                inDataSection = false;
+            }
 
-                string temp;
+            else if(!currentDate.empty()
+                 && line.find("Activity") != string::npos
+                 && line.find("Calories") != string::npos) {
 
-                double calories;
+                inDataSection = true;
+            }
 
-                ss >> temp;
+            else if(line.find("===") != string::npos
+                 || line.empty()) {
+
+                inDataSection = false;
+            }
+
+            else if(inDataSection
+                 && line.size() >= 60) {
+
+                string activity =
+                trimString(line.substr(0, 15));
+
+                string start =
+                trimString(line.substr(15, 15));
+
+                string finish =
+                trimString(line.substr(30, 15));
+
+                string duration =
+                trimString(line.substr(45, 15));
+
+                string caloriesText =
+                trimString(line.substr(60, 15));
+
+                if(activity.empty()
+                   || caloriesText.empty())
+                {
+                    continue;
+                }
+
+                string key =
+                currentDate + "|" +
+                activity + "|" +
+                start + "|" +
+                finish + "|" +
+                duration + "|" +
+                caloriesText;
+
+                if(seen.find(key) != seen.end()) {
+
+                    continue;
+                }
+
+                seen.insert(key);
+
+                stringstream ss(caloriesText);
+
+                double calories = 0;
 
                 ss >> calories;
 
-                caloriesByDate[
-                    currentDate
-                ] += calories;
+                if(!ss.fail()) {
 
-                totalCalories +=
-                calories;
+                    caloriesByDate[currentDate]
+                    += calories;
+
+                    totalCalories += calories;
+                }
             }
         }
 
         file.close();
     }
-
-    // =====================================
-    // SHOW SUMMARY
-    // =====================================
 
     void showSummary() {
 
@@ -115,7 +173,7 @@ public:
         setColor(10);
         cout << totalCalories;
 
-        setColor(15);
+        resetColor();
         cout << " kcal\n\n";
 
         setColor(6);
@@ -124,13 +182,18 @@ public:
         setColor(11);
         cout << "--------------------------------------------------------\n";
 
-        for(auto& pair
-            : caloriesByDate)
-        {
+        if(caloriesByDate.empty()) {
+
+            setColor(12);
+            cout << "Belum ada data kalori tersimpan.\n";
+        }
+
+        for(auto& pair : caloriesByDate) {
+
             setColor(8);
             cout << "Tanggal ";
 
-            setColor(15);
+            resetColor();
             cout << pair.first;
 
             setColor(8);
@@ -139,7 +202,7 @@ public:
             setColor(10);
             cout << pair.second;
 
-            setColor(15);
+            resetColor();
             cout << " kcal\n";
         }
 

@@ -3,170 +3,114 @@
 
 #include <iostream>
 #include <map>
-#include <set>        
+#include <set>
 #include <vector>
 #include <fstream>
-#include <sstream>    
 #include <iomanip>
 #include <ctime>
-#include <algorithm>
 
 #include "HealthActivity.h"
 #include "Warna.h"
 
 using namespace std;
 
-class HistoryManager
-{
+class HistoryManager {
 
 private:
-    map<
-        string,
-        vector<HealthActivity *>>
-        history;
+
+    map<string, vector<HealthActivity*>>
+    history;
+
+    struct ActivityRecord {
+
+        string activity;
+        string start;
+        string finish;
+        string duration;
+        string calories;
+        string note;
+    };
+
+    string trimStr(string s) {
+
+        size_t st =
+        s.find_first_not_of(" \t");
+
+        size_t en =
+        s.find_last_not_of(" \t");
+
+        return (st == string::npos)
+             ? ""
+             : s.substr(st, en - st + 1);
+    }
 
 public:
+
     void addActivity(
         string date,
-        HealthActivity *activity)
-    {
+        HealthActivity* activity
+    ) {
 
         history[date]
-            .push_back(activity);
+        .push_back(activity);
     }
 
-    // =====================================
-    // SHOW HISTORY
-    // =====================================
-
-    void showHistory()
-    {
-
-        setColor(11);
-        cout << "\n========================================================\n";
-
-        setColor(6);
-        cout << "                   RIWAYAT AKTIVITAS\n";
-
-        setColor(11);
-        cout << "========================================================\n\n";
-
-        for (auto &pair : history)
-        {
-
-            setColor(8);
-            cout << "Tanggal : ";
-
-            setColor(15);
-            cout << pair.first
-                 << endl;
-
-            setColor(11);
-            cout << "---------------------------------------------------------------------\n";
-
-            for (auto activity : pair.second)
-            {
-
-                cout
-                    << *activity
-                    << endl;
-            }
-        }
-
-        resetColor();
-    }
-
-    // =====================================
-    // SAVE TO TXT
-    // =====================================
-
-    void saveToFile()
-    {
+    void saveToFile() {
 
         ofstream file(
             "health_logs.txt",
-            ios::app);
+            ios::app
+        );
 
-        time_t now =
-            time(0);
-
-        char *dt =
-            ctime(&now);
+        time_t now = time(0);
+        char* dt = ctime(&now);
 
         file << "========================================================\n";
-
-        file << "Disimpan Pada : "
-             << dt;
-
+        file << "Disimpan Pada : " << dt;
         file << "========================================================\n";
 
-        for (auto &pair : history)
-        {
+        for(auto& pair : history) {
 
             file << "\nDate : "
                  << pair.first
                  << "\n\n";
 
-            file
-                << left
-                << setw(15)
-                << "Activity"
+            file << left
+                 << setw(15) << "Activity"
+                 << setw(15) << "Start"
+                 << setw(15) << "Finish"
+                 << setw(15) << "Duration"
+                 << setw(15) << "Calories"
+                 << setw(25) << "Note"
+                 << endl;
 
-                << setw(15)
-                << "Start"
+            for(auto activity : pair.second) {
 
-                << setw(15)
-                << "Finish"
+                file << setw(15)
+                     << activity->getActivityName();
 
-                << setw(15)
-                << "Duration"
+                file << setw(15)
+                     << activity->getStartTime();
 
-                << setw(15)
-                << "Calories"
+                file << setw(15)
+                     << activity->getFinishTime();
 
-                << endl;
+                file << setw(15)
+                     << activity->getDuration();
 
-            for (auto activity : pair.second)
-            {
+                file << setw(15)
+                     << activity->calculateBurnedCalories();
 
-                file
-                    << setw(15)
-                    << activity
-                           ->getActivityName();
+                file << setw(25)
+                     << activity->getActivityNote();
 
-                file
-                    << setw(15)
-                    << activity
-                           ->getStartTime();
-
-                file
-                    << setw(15)
-                    << activity
-                           ->getFinishTime();
-
-                file
-                    << setw(15)
-                    << activity
-                           ->getDuration();
-
-                file
-                    << setw(15)
-                    << activity
-                           ->calculateBurnedCalories();
-
-                file
-                    << endl;
+                file << endl;
             }
         }
 
         file << "\n\n";
-
         file.close();
     }
-
-    // =====================================
-    // SHOW HISTORY FROM FILE
-    // =====================================
 
     void showHistoryFromFile() {
 
@@ -181,23 +125,14 @@ public:
 
         ifstream file("health_logs.txt");
 
-        if (!file.is_open()) {
+        if(!file.is_open()) {
 
             setColor(12);
             cout << "Belum ada riwayat aktivitas tersimpan.\n";
-
             resetColor();
 
             return;
         }
-
-        struct ActivityRecord {
-            string activity;
-            string start;
-            string finish;
-            string duration;
-            string calories;
-        };
 
         map<string, vector<ActivityRecord>> fileHistory;
         map<string, set<string>> seen;
@@ -206,62 +141,67 @@ public:
         string currentDate = "";
         bool inDataSection = false;
 
-        while (getline(file, line)) {
+        while(getline(file, line)) {
 
-            if (!line.empty() && line.back() == '\r') {
+            if(!line.empty() && line.back() == '\r') {
+
                 line.pop_back();
             }
 
-            if (line.find("Date : ") != string::npos) {
+            if(line.find("Date : ") != string::npos) {
 
-                currentDate = line.substr(7);
-
-                size_t start = currentDate.find_first_not_of(" \t");
-                size_t end   = currentDate.find_last_not_of(" \t");
-
-                if (start != string::npos) {
-                    currentDate = currentDate.substr(start, end - start + 1);
-                }
+                currentDate =
+                trimStr(line.substr(7));
 
                 inDataSection = false;
             }
 
-            else if (!currentDate.empty()
-                && line.find("Activity") != string::npos
-                && line.find("Start")    != string::npos) {
+            else if(!currentDate.empty()
+                 && line.find("Activity") != string::npos
+                 && line.find("Start") != string::npos) {
 
                 inDataSection = true;
             }
 
-            else if (line.find("===") != string::npos
-                  || line.find("Saved At") != string::npos) {
+            else if(line.find("===") != string::npos
+                 || line.find("Disimpan Pada") != string::npos) {
 
                 inDataSection = false;
             }
 
-            else if (inDataSection && line.size() >= 45) {
-
-                auto trimStr = [](string s) -> string {
-                    size_t st = s.find_first_not_of(" \t");
-                    size_t en = s.find_last_not_of(" \t");
-                    return (st == string::npos) ? "" : s.substr(st, en - st + 1);
-                };
+            else if(inDataSection && line.size() >= 45) {
 
                 ActivityRecord rec;
+
                 rec.activity = trimStr(line.substr(0, 15));
                 rec.start    = trimStr(line.substr(15, 15));
                 rec.finish   = trimStr(line.substr(30, 15));
                 rec.duration = trimStr(line.substr(45, 15));
 
-                if (line.size() >= 60) {
-                    rec.calories = trimStr(line.substr(60));
-                }
+                rec.calories =
+                line.size() >= 60
+                ? trimStr(line.substr(60, 15))
+                : "";
 
-                if (rec.activity.empty()) continue;
+                rec.note =
+                line.size() >= 75
+                ? trimStr(line.substr(75))
+                : "-";
 
-                string key = rec.activity + "|" + rec.start + "|" + rec.finish;
+                if(rec.note.empty()) rec.note = "-";
+                if(rec.activity.empty()) continue;
 
-                if (seen[currentDate].find(key) == seen[currentDate].end()) {
+                string key =
+                rec.activity + "|" +
+                rec.start + "|" +
+                rec.finish + "|" +
+                rec.duration + "|" +
+                rec.calories + "|" +
+                rec.note;
+
+                if(seen[currentDate].find(key)
+                   == seen[currentDate].end())
+                {
                     seen[currentDate].insert(key);
                     fileHistory[currentDate].push_back(rec);
                 }
@@ -270,22 +210,21 @@ public:
 
         file.close();
 
-        if (fileHistory.empty()) {
+        if(fileHistory.empty()) {
 
             setColor(12);
             cout << "Belum ada riwayat aktivitas tersimpan.\n";
-
             resetColor();
 
             return;
         }
 
-        for (auto& pair : fileHistory) {
+        for(auto& pair : fileHistory) {
 
             setColor(8);
             cout << "Tanggal : ";
 
-            setColor(15);
+            resetColor();
             cout << pair.first << "\n";
 
             setColor(11);
@@ -293,20 +232,21 @@ public:
 
             setColor(6);
             cout << left
-                 << setw(15) << "Aktivitas"
+                 << setw(18) << "Aktivitas"
                  << setw(15) << "Mulai"
                  << setw(15) << "Selesai"
                  << setw(15) << "Durasi"
                  << setw(15) << "Kalori"
                  << "\n";
 
-            setColor(15);
+            setColor(11);
+            cout << "---------------------------------------------------------------------\n";
 
-            for (auto& rec : pair.second) {
+            for(auto& rec : pair.second) {
 
-                setColor(15);
+                resetColor();
                 cout << left
-                     << setw(15) << rec.activity;
+                     << setw(18) << rec.activity;
 
                 setColor(10);
                 cout << setw(15) << rec.start
@@ -314,6 +254,16 @@ public:
                      << setw(15) << rec.duration
                      << setw(15) << rec.calories
                      << "\n";
+
+                if(rec.activity == "Tidur"
+                   && rec.note != "-")
+                {
+                    setColor(14);
+                    cout << "  -> Kualitas Tidur : ";
+
+                    setColor(10);
+                    cout << rec.note << "\n";
+                }
             }
 
             cout << "\n";
@@ -322,27 +272,16 @@ public:
         resetColor();
     }
 
-    // =====================================
-    // DESTRUCTOR
-    // =====================================
-
-    map<
-        string,
-        vector<HealthActivity *>> &
-    getHistory()
-    {
+    map<string, vector<HealthActivity*>>& getHistory() {
 
         return history;
     }
 
-    ~HistoryManager()
-    {
+    ~HistoryManager() {
 
-        for (auto &pair : history)
-        {
+        for(auto& pair : history) {
 
-            for (auto activity : pair.second)
-            {
+            for(auto activity : pair.second) {
 
                 delete activity;
             }

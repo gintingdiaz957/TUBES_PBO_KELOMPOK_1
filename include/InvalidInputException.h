@@ -13,9 +13,7 @@ private:
 
 public:
 
-    InvalidInputException(
-        string msg
-    ) {
+    InvalidInputException(string msg) {
 
         message = msg;
     }
