@@ -3,6 +3,8 @@
 
 #include <iostream>
 
+#include "Warna.h"
+
 using namespace std;
 
 class HealthActivity
@@ -93,27 +95,48 @@ inline ostream &operator<<(
     const HealthActivity &act)
 {
 
-    os << "Aktivitas      : "
-       << act.getActivityName()
+    setColor(6);
+    os << "Aktivitas      : ";
+
+    setColor(15);
+    os << act.getActivityName()
        << endl;
 
-    os << "Jam Mulai      : "
-       << act.getStartTime()
+    setColor(6);
+    os << "Jam Mulai      : ";
+
+    setColor(15);
+    os << act.getStartTime()
        << endl;
 
-    os << "Jam Selesai    : "
-       << act.getFinishTime()
+    setColor(6);
+    os << "Jam Selesai    : ";
+
+    setColor(15);
+    os << act.getFinishTime()
        << endl;
 
-    os << "Durasi         : "
-       << act.getDuration()
-       << " menit"
+    setColor(6);
+    os << "Durasi         : ";
+
+    setColor(10);
+    os << act.getDuration();
+
+    setColor(15);
+    os << " menit"
        << endl;
 
-    os << "Kalori Terbakar: "
-       << act.calculateBurnedCalories()
-       << " kcal"
+    setColor(6);
+    os << "Kalori Terbakar: ";
+
+    setColor(10);
+    os << act.calculateBurnedCalories();
+
+    setColor(15);
+    os << " kcal"
        << endl;
+
+    resetColor();
 
     return os;
 }

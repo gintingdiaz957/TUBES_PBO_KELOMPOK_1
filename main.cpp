@@ -13,6 +13,7 @@
 #include "include/caloriesTracker.h"
 #include "include/HistoryManager.h"
 #include "include/HealthAnalyzer.h"
+#include "include/InputValidator.h"
 
 #include "include/Warna.h"
 
@@ -150,11 +151,11 @@ int main() {
         setColor(11);
         cout << " ===\n\n";
 
-        setColor(8);
+        setColor(14);
         cout << "Nama : ";
 
         getline(cin,name);
-        setColor(15);
+        setColor(14);
 
         do {
 
@@ -355,136 +356,267 @@ int main() {
 
         switch(choice) {
 
-            case 1: {
+           case 1: {
 
-                clearScreen();
+    clearScreen();
 
-                showTitle();
+    showTitle();
 
-                string date;
+    string date;
 
-                string start;
-                string finish;
+    string start;
+    string finish;
 
-                int type;
+    int type;
 
-                setColor(11);
-                cout << "=== ";
+    int day;
+    int month;
+    int year;
 
-                setColor(6);
-                cout << "TAMBAH AKTIVITAS";
+    bool validDate = false;
 
-                setColor(11);
-                cout << " ===\n\n";
+    setColor(11);
+    cout << "=== ";
 
-                setColor(8);
-                cout << "Tanggal : ";
+    setColor(6);
+    cout << "TAMBAH AKTIVITAS";
 
-                cin >> date;
-                setColor(6);
+    setColor(11);
+    cout << " ===\n\n";
 
-                cout << "\n1. Lari\n";
-                cout << "2. Bersepeda\n";
-                cout << "3. Latihan Beban\n";
-                cout << "4. Tidur\n\n";
+    do {
 
-                setColor(6);
-                cout << "Pilih Aktivitas : ";
+        setColor(8);
+        cout << "Tanggal : ";
 
-                cin >> type;
+        setColor(15);
+        cin >> day;
 
-                setColor(8);
-                cout << "\nJam Mulai (HH:MM): ";
+        if(cin.fail()) {
 
-                cin >> start;
+            cin.clear();
 
-                cout << "Jam Selesai (HH:MM): ";
+            cin.ignore(
+                numeric_limits<streamsize>::max(),
+                '\n'
+            );
 
-                cin >> finish;
+            setColor(12);
+            cout << "Input tanggal harus berupa angka!\n\n";
 
-                HealthActivity* activity;
+            continue;
+        }
 
-                switch(type) {
+        setColor(8);
+        cout << "Bulan   : ";
 
-                    case 1:
+        setColor(15);
+        cin >> month;
 
-                        activity =
-                        new Running(
+        if(cin.fail()) {
 
-                            start,
-                            finish,
-                            "High",
-                            user.getWeight()
-                        );
+            cin.clear();
 
-                        break;
+            cin.ignore(
+                numeric_limits<streamsize>::max(),
+                '\n'
+            );
 
-                    case 2:
+            setColor(12);
+            cout << "Input bulan harus berupa angka!\n\n";
 
-                        activity =
-                        new Cycling(
+            continue;
+        }
 
-                            start,
-                            finish,
-                            "Medium",
-                            user.getWeight()
-                        );
+        setColor(8);
+        cout << "Tahun   : ";
 
-                        break;
+        setColor(15);
+        cin >> year;
 
-                    case 3:
+        if(cin.fail()) {
 
-                        activity =
-                        new Strength(
+            cin.clear();
 
-                            start,
-                            finish,
-                            "High",
-                            user.getWeight()
-                        );
+            cin.ignore(
+                numeric_limits<streamsize>::max(),
+                '\n'
+            );
 
-                        break;
+            setColor(12);
+            cout << "Input tahun harus berupa angka!\n\n";
 
-                    default:
+            continue;
+        }
 
-                        activity =
-                        new SleepActivity(
+        if(
+            InputValidator
+            ::isValidDate(
+                day,
+                month,
+                year
+            )
+        ) {
 
-                            start,
-                            finish,
-                            "Low",
-                            8
-                        );
-                }
+            validDate = true;
 
-                manager.addActivity(
+            date =
+            InputValidator
+            ::formatDate(
+                day,
+                month,
+                year
+            );
+        }
 
-                    date,
-                    activity
-                );
+        else {
 
-                double calories =
-                activity
-                ->calculateBurnedCalories();
+            setColor(12);
+            cout << "Tanggal tidak valid! Coba masukkan lagi.\n\n";
+        }
 
-                    calories;
+    } while(!validDate);
+
+    setColor(6);
+
+    cout << "\n1. Lari\n";
+    cout << "2. Bersepeda\n";
+    cout << "3. Latihan Beban\n";
+    cout << "4. Tidur\n\n";
+
+    setColor(6);
+    cout << "Pilih Aktivitas : ";
+
+    setColor(15);
+    cin >> type;
+
+    do {
+
+        setColor(8);
+        cout << "\nJam Mulai (HH:MM): ";
+
+        setColor(15);
+        cin >> start;
+
+        if(
+            !InputValidator
+            ::isValidTime(start)
+        ) {
+
+            setColor(12);
+            cout << "Jam mulai tidak valid! Contoh benar: 08:30\n";
+        }
+
+    } while(
+        !InputValidator
+        ::isValidTime(start)
+    );
+
+    do {
+
+        setColor(8);
+        cout << "Jam Selesai (HH:MM): ";
+
+        setColor(15);
+        cin >> finish;
+
+        if(
+            !InputValidator
+            ::isValidTime(finish)
+        ) {
+
+            setColor(12);
+            cout << "Jam selesai tidak valid! Contoh benar: 17:45\n";
+        }
+
+    } while(
+        !InputValidator
+        ::isValidTime(finish)
+    );
+
+    HealthActivity* activity;
+
+    switch(type) {
+
+        case 1:
+
+            activity =
+            new Running(
+
+                start,
+                finish,
+                "High",
+                user.getWeight()
+            );
+
+            break;
+
+        case 2:
+
+            activity =
+            new Cycling(
+
+                start,
+                finish,
+                "Medium",
+                user.getWeight()
+            );
+
+            break;
+
+        case 3:
+
+            activity =
+            new Strength(
+
+                start,
+                finish,
+                "High",
+                user.getWeight()
+            );
+
+            break;
+
+        default:
+
+            activity =
+            new SleepActivity(
+
+                start,
+                finish,
+                "Low",
+                8
+            );
+    }
+
+    manager.addActivity(
+
+        date,
+        activity
+    );
+
+    double calories =
+    activity
+    ->calculateBurnedCalories();
+
+        calories;
 
 
-                manager.saveToFile();
+    manager.saveToFile();
 
-                setColor(10);
-                cout << "\nAktivitas Berhasil Disimpan!\n\n";
-                
-                setColor(14);
-                cout << "Kalori Terbakar : "
-                     << calories
-                     << " kcal\n";
+    setColor(10);
+    cout << "\nAktivitas Berhasil Disimpan!\n\n";
+    
+    setColor(14);
+    cout << "Kalori Terbakar : "
+         << calories
+         << " kcal\n";
 
-                pauseScreen();
-                setColor(15);
+    pauseScreen();
+    setColor(15);
 
-                break;
-            }
+    break;
+}
 
             case 2:
 

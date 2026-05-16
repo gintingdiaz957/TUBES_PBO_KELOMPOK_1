@@ -7,6 +7,8 @@
 #include <map>
 #include <iomanip>
 
+#include "Warna.h"
+
 using namespace std;
 
 class CaloriesTracker {
@@ -95,35 +97,55 @@ public:
 
     void showSummary() {
 
+        setColor(11);
         cout << "\n========================================================\n";
 
+        setColor(6);
         cout << "               RINGKASAN KALORI\n";
 
+        setColor(11);
         cout << "========================================================\n\n";
 
         cout << fixed
              << setprecision(1);
 
-        cout << "Total Kalori Terbakar : "
-             << totalCalories
-             << " kcal\n\n";
+        setColor(14);
+        cout << "Total Kalori Terbakar : ";
 
+        setColor(10);
+        cout << totalCalories;
+
+        setColor(15);
+        cout << " kcal\n\n";
+
+        setColor(6);
         cout << "Kalori Per Tanggal\n";
 
+        setColor(11);
         cout << "--------------------------------------------------------\n";
 
         for(auto& pair
             : caloriesByDate)
         {
+            setColor(8);
+            cout << "Tanggal ";
 
-            cout << "Tanggal "
-                 << pair.first
-                 << " : "
-                 << pair.second
-                 << " kcal\n";
+            setColor(15);
+            cout << pair.first;
+
+            setColor(8);
+            cout << " : ";
+
+            setColor(10);
+            cout << pair.second;
+
+            setColor(15);
+            cout << " kcal\n";
         }
 
         cout << endl;
+
+        resetColor();
     }
 };
 
