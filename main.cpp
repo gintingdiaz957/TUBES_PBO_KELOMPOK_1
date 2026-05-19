@@ -5,15 +5,45 @@
 #include "include/UserProfile.h"
 #include "include/HistoryManager.h"
 #include "include/CaloriesTracker.h"
+#include "include/GoalView.h"
 
 #include "include/MenuView.h"
 #include "include/ProfileView.h"
 #include "include/RegistrationForm.h"
 #include "include/ActivityForm.h"
+#include "include/ReportFeatures.h"
 
 #include "include/Warna.h"
 
 using namespace std;
+
+int showExtendedMainMenu() {
+
+    setColor(11);
+    cout << "\n========================================================\n";
+
+    setColor(6);
+    cout << "\nMENU UTAMA\n\n";
+
+    cout << "[1] Tambah Aktivitas\n";
+    cout << "[2] Lihat Riwayat\n";
+    cout << "[3] Analisis Kesehatan\n";
+    cout << "[4] Ringkasan Kalori\n";
+    cout << "[5] Target Kesehatan\n";
+    cout << "[6] Progress Target Harian\n";
+    cout << "[7] Riwayat 7 Hari Terakhir\n";
+    cout << "[0] Keluar\n\n";
+
+    resetColor();
+
+    return InputValidator
+    ::inputInt(
+        "Pilih Menu : ",
+        0,
+        7,
+        "Menu Tidak Valid!"
+    );
+}
 
 int main() {
 
@@ -64,8 +94,7 @@ int main() {
         ::showProfileSummary(user);
 
         choice =
-        MenuView
-        ::showMainMenu();
+        showExtendedMainMenu();
 
         switch(choice) {
 
@@ -126,6 +155,48 @@ int main() {
 
                 break;
             }
+
+            case 5:
+
+                clearScreen();
+
+                showTitle();
+
+                GoalView
+                ::showGoals(
+                    user,
+                    manager
+                );
+
+                pauseScreen();
+
+                break;
+
+            case 6:
+
+                clearScreen();
+
+                showTitle();
+
+                ReportFeatures
+                ::showDailyProgress();
+
+                pauseScreen();
+
+                break;
+
+            case 7:
+
+                clearScreen();
+
+                showTitle();
+
+                ReportFeatures
+                ::showWeeklyReport();
+
+                pauseScreen();
+
+                break;
 
             case 0:
 

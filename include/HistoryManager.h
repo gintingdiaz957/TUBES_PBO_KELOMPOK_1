@@ -277,6 +277,19 @@ public:
         return history;
     }
 
+    int getTotalActivities() {
+
+    int total = 0;
+
+    for(auto& pair : history) {
+
+        total +=
+        pair.second.size();
+    }
+
+    return total;
+}
+
     ~HistoryManager() {
 
         for(auto& pair : history) {

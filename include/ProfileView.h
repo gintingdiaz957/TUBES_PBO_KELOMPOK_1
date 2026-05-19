@@ -7,6 +7,7 @@
 #include "UserProfile.h"
 #include "HealthAnalyzer.h"
 #include "Warna.h"
+#include "HealthSummary.h"
 
 using namespace std;
 
@@ -15,61 +16,15 @@ class ProfileView {
 public:
 
     static void showProfileSummary(
-        UserProfile& user
-    ) {
+    UserProfile& user
+) {
 
-        double bmi =
-        HealthAnalyzer
-        ::calculateBMI(
-            user.getWeight(),
-            user.getHeight()
-        );
+    HealthSummary summary(
+        user
+    );
 
-        setColor(6);
-        cout << "RINGKASAN PROFIL\n";
-
-        setColor(11);
-        cout << "========================================================\n\n";
-
-        resetColor();
-
-        cout << "Nama                : "
-             << user.getName()
-             << endl;
-
-        cout << "Berat Badan         : "
-             << user.getWeight()
-             << " kg\n";
-
-        cout << "Tinggi Badan        : "
-             << user.getHeight()
-             << " cm\n";
-
-        cout << "Umur                : "
-             << user.getAge()
-             << endl;
-
-        cout << "Tujuan              : "
-             << user.getGoal()
-             << endl;
-
-        cout << "BMI                 : "
-             << fixed
-             << setprecision(1)
-             << bmi
-             << " ("
-             << HealthAnalyzer
-                ::getBMICategory(bmi)
-             << ")\n";
-
-        cout << "Berat Badan Ideal   : "
-             << user.getIdealWeight()
-             << " kg\n";
-
-        cout << "Kebutuhan Kalori    : "
-             << user.getRecommendedCalories()
-             << " kcal\n";
-    }
+    cout << summary;
+}
 
     static void showHealthAnalysis(
         UserProfile& user

@@ -24,6 +24,7 @@ public:
         cout << "[2] Lihat Riwayat\n";
         cout << "[3] Analisis Kesehatan\n";
         cout << "[4] Ringkasan Kalori\n";
+        cout << "[5] Target Kesehatan\n";
         cout << "[0] Keluar\n\n";
 
         resetColor();
@@ -32,7 +33,7 @@ public:
         ::inputInt(
             "Pilih Menu : ",
             0,
-            4,
+            5,
             "Menu Tidak Valid!"
         );
     }
